@@ -103,6 +103,7 @@ footer {
 
   #section-buttons {
     flex: none;
+    padding-bottom: 1em;
     
       .section-option {
         color: $light-font-color;
@@ -115,6 +116,18 @@ footer {
             border-bottom: 2px solid $success-color;
           }
       }
+
+      #menu-icon {
+        height: 1.5em;
+        width: 1.5em;
+        fill: $light-font-color;
+        float: right;
+        cursor: pointer;
+
+        &:hover {
+          fill: darken($light-font-color, 20%);
+        }
+      }
   }
 
   #link-container {
@@ -123,17 +136,18 @@ footer {
     flex-flow: row wrap;
     flex: 1 0 auto;
     padding: 1em;
+    justify-content: space-between;
     
       .link-card {
+        flex: 0 0 19%;
         color: $light-font-color;
         font-size: 2em;
         display: inline-block;
         border: 1px solid $light-font-color;
+        border-radius: 5px;
         cursor: pointer;
         height: 42%;
-        width: 15%;
-        margin: 2vh 2vw;
-        // margin: 1em;
+        box-sizing: border-box;
       }
   }
  
