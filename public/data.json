@@ -1,0 +1,142 @@
+[
+    {
+        "sectionTitle": "Home",
+        "links": [
+            {
+                "linkTitle": "Yahoo",
+                "linkURL": "https://www.yahoo.com",
+                "imageURL": ""
+            },
+            {
+                "linkTitle": "GitHub - MAP",
+                "linkURL": "https://indy-github.milliman.com/PRM/milliman-access-portal",
+                "imageURL": ""
+            },
+            {
+                "linkTitle": "GitHub - MAP",
+                "linkURL": "https://indy-github.milliman.com/PRM/milliman-access-portal",
+                "imageURL": ""
+            },
+            {
+                "linkTitle": "GitHub - MAP",
+                "linkURL": "https://indy-github.milliman.com/PRM/milliman-access-portal",
+                "imageURL": ""
+            },
+            {
+                "linkTitle": "GitHub - MAP",
+                "linkURL": "https://indy-github.milliman.com/PRM/milliman-access-portal",
+                "imageURL": ""
+            },
+            {
+                "linkTitle": "GitHub - MAP",
+                "linkURL": "https://indy-github.milliman.com/PRM/milliman-access-portal",
+                "imageURL": ""
+            },
+            {
+                "linkTitle": "GitHub - MAP",
+                "linkURL": "https://indy-github.milliman.com/PRM/milliman-access-portal",
+                "imageURL": ""
+            },
+            {
+                "linkTitle": "GitHub - MAP",
+                "linkURL": "https://indy-github.milliman.com/PRM/milliman-access-portal",
+                "imageURL": ""
+            },
+            {
+                "linkTitle": "GitHub - MAP",
+                "linkURL": "https://indy-github.milliman.com/PRM/milliman-access-portal",
+                "imageURL": ""
+            },
+            {
+                "linkTitle": "GitHub - MAP",
+                "linkURL": "https://indy-github.milliman.com/PRM/milliman-access-portal",
+                "imageURL": ""
+            },
+            {
+                "linkTitle": "GitHub - MAP",
+                "linkURL": "https://indy-github.milliman.com/PRM/milliman-access-portal",
+                "imageURL": ""
+            },
+            {
+                "linkTitle": "GitHub - MAP",
+                "linkURL": "https://indy-github.milliman.com/PRM/milliman-access-portal",
+                "imageURL": ""
+            },
+            {
+                "linkTitle": "GitHub - MAP",
+                "linkURL": "https://indy-github.milliman.com/PRM/milliman-access-portal",
+                "imageURL": ""
+            },
+            {
+                "linkTitle": "GitHub - MAP",
+                "linkURL": "https://indy-github.milliman.com/PRM/milliman-access-portal",
+                "imageURL": ""
+            },
+            {
+                "linkTitle": "GitHub - MAP",
+                "linkURL": "https://indy-github.milliman.com/PRM/milliman-access-portal",
+                "imageURL": ""
+            },
+            {
+                "linkTitle": "GitHub - MAP",
+                "linkURL": "https://indy-github.milliman.com/PRM/milliman-access-portal",
+                "imageURL": ""
+            },
+            {
+                "linkTitle": "GitHub - MAP",
+                "linkURL": "https://indy-github.milliman.com/PRM/milliman-access-portal",
+                "imageURL": ""
+            },
+            {
+                "linkTitle": "GitHub - MAP",
+                "linkURL": "https://indy-github.milliman.com/PRM/milliman-access-portal",
+                "imageURL": ""
+            },
+            {
+                "linkTitle": "GitHub - MAP",
+                "linkURL": "https://indy-github.milliman.com/PRM/milliman-access-portal",
+                "imageURL": ""
+            },
+            {
+                "linkTitle": "GitHub - MAP",
+                "linkURL": "https://indy-github.milliman.com/PRM/milliman-access-portal",
+                "imageURL": ""
+            },
+            {
+                "linkTitle": "GitHub - MAP",
+                "linkURL": "https://indy-github.milliman.com/PRM/milliman-access-portal",
+                "imageURL": ""
+            }
+        ]
+    },
+    {
+        "sectionTitle": "Banking",
+        "links": [
+            {
+                "linkTitle": "Chase",
+                "linkURL": "https://www.chase.com",
+                "imageURL": "https://www.chase.com/icon.png"
+            },
+            {
+                "linkTitle": "American Express",
+                "linkURL": "https://www.americanexpress.com",
+                "imageURL": "https://www.americanexpress.com/icon.png"
+            }
+        ]
+    },
+    {
+        "sectionTitle": "Web Development",
+        "links": [
+            {
+                "linkTitle": "GitHub",
+                "linkURL": "https://www.github.com",
+                "imageURL": "https://www.github.com/icon.png"
+            },
+            {
+                "linkTitle": "MSDN",
+                "linkURL": "https://www.msdn.com",
+                "imageURL": "https://www.msdn.com/icon.png"
+            }
+        ]
+    }
+]
