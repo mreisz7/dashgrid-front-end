@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import './scss/App.scss';
 import { fetchData } from  './scripts/dataFetch';
 
-import './images/left-arrow.svg';
-import './images/right-arrow.svg';
-import './images/menu.svg';
-import './images/add.svg';
+import {ReactComponent as LeftArrow} from './images/left-arrow.svg';
+import {ReactComponent as RightArrow} from './images/right-arrow.svg';
+import {ReactComponent as Menu} from './images/menu.svg';
+import {ReactComponent as Add} from './images/add.svg';
 
 interface section {
   sectionTitle: string;
@@ -168,6 +168,7 @@ class App extends Component<{}, AppState> {
     return (
       <div id="section-buttons">
         {sections}
+        <Menu id="menu-icon"/>
       </div>
     )
   }
