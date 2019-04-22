@@ -133,22 +133,57 @@ footer {
   #link-container {
     position: relative;
     display: flex;
-    flex-flow: row wrap;
+    flex-flow: row nowrap;
     flex: 1 0 auto;
     padding: 1em;
     justify-content: space-between;
-    
-      .link-card {
-        flex: 0 0 19%;
-        color: $light-font-color;
-        font-size: 2em;
-        display: inline-block;
-        border: 1px solid $light-font-color;
-        border-radius: 5px;
+
+      .scroll-container {
+        flex: 0 0 3.5vw;
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+        align-items: center;
         cursor: pointer;
-        height: 42%;
-        box-sizing: border-box;
+        margin: 0 .75em;
+  
+          &:hover {
+            background: lighten($background-color, 5%);
+          }
       }
+
+      #scroll-left,
+      #scroll-right {
+        height: 100%;
+        width: 100%;
+        fill: $light-font-color;
+        margin: 0 1em;
+      }
+
+      #links {
+        display: flex;
+        flex-flow: row wrap;
+        flex: 1 1 auto;
+        justify-content: space-between;
+        align-items: center;
+
+        .link-card {
+          flex: 0 0 19%;
+          color: $light-font-color;
+          font-size: 2em;
+          display: inline-block;
+          border: 1px solid $light-font-color;
+          border-radius: 5px;
+          cursor: pointer;
+          height: 42%;
+          box-sizing: border-box;
+
+          &.empty-spot {
+            border: 1px dashed rgba($light-font-color, .5);
+          }
+        }
+      }
+    
   }
  
   #page-indicators {

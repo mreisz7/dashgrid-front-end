@@ -20,8 +20,8 @@ interface link {
 
 interface AppState {
   data: Array<section>;
-  selectedSection: string;
-  ctrlPressed: boolean;
+  selectedSection: number;
+  totalSections: number;
   screenWidth: number;
   currentPage: number;
   totalPages: number;
@@ -33,17 +33,16 @@ class App extends Component<{}, AppState> {
     super(props);
     this.state = { 
       data: [],
-      selectedSection: '',
-      ctrlPressed: false,
+      selectedSection: 0,
+      totalSections: 0,
       screenWidth: window.innerWidth,
       currentPage: 0,
       totalPages: 0,
     };
 
     this.handleButtonPress = this.handleButtonPress.bind(this);
-    this.handleButtonRelease = this.handleButtonRelease.bind(this);
-    this.handleWheel = this.handleWheel.bind(this);
     this.handleLinkClick = this.handleLinkClick.bind(this);
+    this.handleWheel = this.handleWheel.bind(this);
     this.handleWindowSizeChange = this.handleWindowSizeChange.bind(this);
   }
 
@@ -51,59 +50,70 @@ class App extends Component<{}, AppState> {
 
   async componentDidMount() {
     const data = await fetchData();
-    this.setState({ data,
-      selectedSection: data[0].sectionTitle
+    this.setState({ 
+      data,
+      totalSections: data.length,
     }, () => {
-      this.handleSectionSelection(this.state.selectedSection);
+      this.selectSection(this.state.selectedSection);
     });
     document.addEventListener('keydown', this.handleButtonPress, false);
-    document.addEventListener('keyup', this.handleButtonRelease, false);
     window.addEventListener('resize', this.handleWindowSizeChange, false);
   }
 
   handleButtonPress(event: KeyboardEvent) {
     event.stopPropagation();
-    if (event.ctrlKey) {
-      this.setState({ ctrlPressed: true });
+    if (event.altKey && event.code === 'KeyN') {
+      alert('Add new link');
     }
-  }
-
-  handleButtonRelease(event: KeyboardEvent) {
-    event.stopPropagation();
-    if (!event.ctrlKey) {
-      this.setState({ ctrlPressed: false })
+    if (event.code === "ArrowRight" || event.code === "ArrowDown") {
+      this.changeCurrentPage('increase');
+    }
+    if (event.code === "ArrowLeft" || event.code === "ArrowUp") {
+      this.changeCurrentPage('decrease');
+    }
+    if (event.code === 'Home') {
+      this.selectSection(0);
+    }
+    if (event.code === 'End') {
+      this.selectSection(this.state.totalSections - 1, () => {
+        this.setState({ currentPage: this.state.totalPages });
+      })
     }
   }
 
   handleLinkClick(event: React.MouseEvent, location: string) {
     event.stopPropagation();
-    if (event.ctrlKey) {
+    if (event.button === 1 || event.ctrlKey) {
       window.open(location, '_blank');
     } else {
       window.location.href = location;
     }
   }
 
-  handleSectionSelection(selectedSection: string) {
+  selectSection(selectedSection: number, callBack?: () => void) {
     this.setState({
       selectedSection,
       currentPage: 1,
     }, () => {
-      const totalLinks = this.getAllLinksFromSelectedSection().length;
-      this.setState({ totalPages: Math.ceil(totalLinks / this.LinksPerPage) })
+      const totalLinks = this.getAllLinksFromSelectedSection().length + 1;
+      this.setState(
+        { totalPages: Math.ceil(totalLinks / this.LinksPerPage) },
+        () => {
+          if (callBack !== undefined) {
+            console.log('callBack called.');
+            callBack();
+          }
+        }
+      )
     });
   }
 
   handleWheel(event: React.WheelEvent) {
-    const sensitivity = 0.4;
+    const sensitivity = 0.5;
     if (event.deltaY < -sensitivity || event.deltaX < -sensitivity) {
-      if (this.state.currentPage > 1) {
-        this.setState({ currentPage: this.state.currentPage - 1 });
-      };   
+      this.changeCurrentPage('decrease');   
     } else if (event.deltaY > sensitivity || event.deltaX > sensitivity) {
-      if (this.state.currentPage < this.state.totalPages) {
-        this.setState({ currentPage: this.state.currentPage + 1 });
-      }
+      this.changeCurrentPage('increase');   
     }
   }
 
@@ -116,8 +126,35 @@ class App extends Component<{}, AppState> {
   }
 
   getAllLinksFromSelectedSection() {
-    return this.state.data
-      .filter(section => section.sectionTitle === this.state.selectedSection)[0].links;
+    if (this.state.data) {
+      return this.state.data[this.state.selectedSection].links;
+    } else {
+      return new Array();
+    }
+  }
+
+  changeCurrentPage(direction: 'increase' | 'decrease') {
+    if (direction === 'increase') {
+      if (this.state.currentPage < this.state.totalPages) {
+        this.setState({ currentPage: this.state.currentPage + 1 });
+      } else if (this.state.selectedSection < (this.state.totalSections - 1)) {
+        this.selectSection(this.state.selectedSection + 1);
+      } else {
+        this.selectSection(0);
+      }
+    } else {
+      if (this.state.currentPage > 1) {
+        this.setState({ currentPage: this.state.currentPage - 1 });
+      } else if (this.state.selectedSection > 0) {
+        this.selectSection(this.state.selectedSection - 1, () => {
+          this.setState({ currentPage: this.state.totalPages });
+        });
+      } else {
+        this.selectSection(this.state.data.length - 1, () => {
+          this.setState({ currentPage: this.state.totalPages });
+        });
+      }
+    }
   }
 
   renderHeader() {
@@ -154,13 +191,13 @@ class App extends Component<{}, AppState> {
   }
 
   renderSections() {
-    const sections = this.state.data.map((section, key) => 
-      <span 
-        key={key} 
-        className={`section-option ${section.sectionTitle === this.state.selectedSection 
+    const sections = this.state.data.map((section, index) => 
+      <span
+        key={index}
+        className={`section-option ${index === this.state.selectedSection 
           ? 'selected-section' 
           : ''}`}
-        onClick={() => this.handleSectionSelection(section.sectionTitle)}
+        onClick={() => this.selectSection(index)}
       >
         {section.sectionTitle}
       </span>
@@ -174,48 +211,66 @@ class App extends Component<{}, AppState> {
   }
 
   renderLinks() {
+    let linkCards = this.getAllLinksFromSelectedSection()
+      .slice(
+        (this.state.currentPage - 1) * this.LinksPerPage,
+        this.state.currentPage * this.LinksPerPage
+      ).map((link, index) => 
+        <span 
+          key={index}
+          className='link-card'
+          onClick={(event) => this.handleLinkClick(event, link.linkURL)}
+        >
+          {link.linkTitle}
+        </span>
+      );
+    if (this.state.currentPage === this.state.totalPages) {
+      linkCards.push((
+        <span className='link-card add-link'>Add Link</span>
+      ));
+    }
+    if (linkCards.length < this.LinksPerPage) {
+      const spotsToPad = this.LinksPerPage - linkCards.length;
+      linkCards.length = this.LinksPerPage;
+      linkCards.fill((
+        <span className='link-card empty-spot' />
+      ), linkCards.length - spotsToPad, this.LinksPerPage);
+    }
+    
     return (
       <div id="link-container">
-        {this.getAllLinksFromSelectedSection()
-          .slice(
-            (this.state.currentPage - 1) * this.LinksPerPage,
-            this.state.currentPage * this.LinksPerPage
-          ).map((link, key) => 
-            <span 
-              key={key}
-              className='link-card'
-              onClick={(event) => this.handleLinkClick(event, link.linkURL)}
-            >
-              {link.linkTitle}
-            </span>
-          )
-        }
+        <div className="scroll-container" onClick={() => this.changeCurrentPage('decrease')}>
+          <LeftArrow id="scroll-left" />
+        </div>
+        <div id="links">
+          { linkCards }
+        </div>
+        <div className="scroll-container" onClick={() => this.changeCurrentPage('increase')}>
+          <RightArrow id="scroll-right" />
+        </div>
       </div>
     )
   }
 
   renderPageIndicators() {
-    if (this.state.totalPages > 1) {
-      const range = Array.from(Array(this.state.totalPages).keys());
-      const pageIndicators = range.map((key) =>
-        <div
-          className={`page-indicator 
-            ${key + 1 === this.state.currentPage 
-              ? 'selected'
-              : ''
-            }`
-          }
-          onClick={() => this.handlePageChange(key + 1)}
-        />
-      )
-      return (
-        <div id="page-indicators">
-          {pageIndicators}
-        </div>
-      )
-    } else {
-      return null;
-    }
+    const range = Array.from(Array(this.state.totalPages).keys());
+    const pageIndicators = range.map((key, index) =>
+      <div
+        key={index}
+        className={`page-indicator 
+          ${key + 1 === this.state.currentPage 
+            ? 'selected'
+            : ''
+          }`
+        }
+        onClick={() => this.handlePageChange(key + 1)}
+      />
+    )
+    return (
+      <div id="page-indicators">
+        {pageIndicators}
+      </div>
+    )
   }
   
   render() {
@@ -224,7 +279,7 @@ class App extends Component<{}, AppState> {
         {this.renderHeader()}
         <div id="app" onWheel={this.handleWheel}>
           {this.renderSections()}
-          {this.state.selectedSection ? this.renderLinks() : null}
+          {this.state.data.length > 0 ? this.renderLinks() : null}
           {this.renderPageIndicators()}
         </div>
         {this.renderFooter()}
