@@ -20,6 +20,7 @@ interface link {
 
 interface AppState {
   data: Array<section>;
+  dataLoaded: boolean;
   selectedSection: number;
   totalSections: number;
   screenWidth: number;
@@ -33,6 +34,7 @@ class App extends Component<{}, AppState> {
     super(props);
     this.state = { 
       data: [],
+      dataLoaded: false,
       selectedSection: 0,
       totalSections: 0,
       screenWidth: window.innerWidth,
@@ -54,7 +56,9 @@ class App extends Component<{}, AppState> {
       data,
       totalSections: data.length,
     }, () => {
-      this.selectSection(this.state.selectedSection);
+      this.selectSection(this.state.selectedSection, () => {
+        this.setState({ dataLoaded: true });
+      });
     });
     document.addEventListener('keydown', this.handleButtonPress, false);
     window.addEventListener('resize', this.handleWindowSizeChange, false);
@@ -99,8 +103,7 @@ class App extends Component<{}, AppState> {
       this.setState(
         { totalPages: Math.ceil(totalLinks / this.LinksPerPage) },
         () => {
-          if (callBack !== undefined) {
-            console.log('callBack called.');
+          if (callBack) {
             callBack();
           }
         }
@@ -226,15 +229,15 @@ class App extends Component<{}, AppState> {
       );
     if (this.state.currentPage === this.state.totalPages) {
       linkCards.push((
-        <span className='link-card add-link'>Add Link</span>
+        <span key='add-link' className='link-card add-link'>Add Link</span>
       ));
     }
     if (linkCards.length < this.LinksPerPage) {
-      const spotsToPad = this.LinksPerPage - linkCards.length;
-      linkCards.length = this.LinksPerPage;
-      linkCards.fill((
-        <span className='link-card empty-spot' />
-      ), linkCards.length - spotsToPad, this.LinksPerPage);
+      console.log('padding needed');
+      const padArray: JSX.Element[] = Array.from({ length: this.LinksPerPage - linkCards.length }, 
+        (_, index) => <span key={`pad-link-${index}`} className='link-card empty-spot' />
+      )
+      linkCards = linkCards.concat(padArray);
     }
     
     return (
@@ -279,7 +282,7 @@ class App extends Component<{}, AppState> {
         {this.renderHeader()}
         <div id="app" onWheel={this.handleWheel}>
           {this.renderSections()}
-          {this.state.data.length > 0 ? this.renderLinks() : null}
+          {this.state.dataLoaded ? this.renderLinks() : null}
           {this.renderPageIndicators()}
         </div>
         {this.renderFooter()}
